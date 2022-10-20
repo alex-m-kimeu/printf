@@ -1,45 +1,49 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdlib.h>
 #include <stdarg.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <unistd.h>
+#include <limits.h>
+#include <stdio.h>
 
-/**
- * struct flags - struct containing flags to "turn on"
- * when a flag specifier is passed to _printf()
- * @plus: flag for the '+' character
- * @space: flag for the ' ' character
- * @hash: flag for the '#' character
- */
-
-typedef struct flags
-{
-	int plus;
-	int space;
-	int hash;
-} flags_t;
-
-/**
- * struct printHandler - struct to choose the right function depending
- * on the format specifier passed to _printf()
- * @c: format specifier
- * @f: pointer to the correct printing function
- */
-
-typedef struct printHandler
-{
-	char c;
-	int (*f)(va_list ap, flags_t *f);
-} ph;
-
-/* _printf */
 int _printf(const char *format, ...);
+int print_char(va_list ap);
+int print_str(va_list ap);
+int print_nbr(va_list ap);
+int print_binary(va_list ap);
+int print_octal(va_list ap);
+int print_hexa_lower(va_list ap);
+int print_hexa_upper(va_list ap);
+int print_unsigned(va_list ap);
+int print_str_unprintable(va_list ap);
+int print_str_reverse(va_list ap);
+int print_ptr(va_list ap);
+int print_rot13(va_list ap);
+int print_percent(va_list ap __attribute__((unused)));
+int print_number(int n);
+int print_unsigned_number(unsigned int n);
+int _putchar(char c);
+int _puts(char *str, int ascii);
+int _nbr_len(int prmNumber);
+int _strlen_recursion(char *s);
+int convert_alpha_numeric(int nb, int upper);
+char *convert_rot13(char *str);
+char *convert_base(unsigned long nb, unsigned int base, int upper);
+char *_strdup(char *str);
+char *convert_base_pointer(unsigned long p);
 
-/* print_numbers */
-int print_int(va_list l, flags_t *f);
-void print_num(int n);
-int print_unsigned(va_list l, flags_t *f);
-int count_digit(int i);
+/**
+ * struct flags_printf - struct conversion to function
+ * @c: flag string
+ * @f: pointer to func
+ */
 
-#endif /*MAIN*/
+typedef struct flags_printf
+{
+	char *c;
+	int (*f)(va_list);
+} flags_p;
 
+#endif /*MAIN_H*/
