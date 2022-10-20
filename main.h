@@ -38,4 +38,5 @@ void print_num(int n);
 int print_unsigned(va_list l, flags_t *f);
 int count_digit(int i);
 
-#endif /*MAIN_H*/
+#endif /*MAIN*/
+
