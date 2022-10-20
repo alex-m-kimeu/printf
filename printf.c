@@ -1,48 +1,47 @@
 #include "main.h"
 
 /**
- * _printf - produces output according to a format
- * @format: format string containing the characters and specifiers
- * Description: this function will call the get_print() function that will
- * determine which printing function to call depending on the conversion
- * specifiers contained into fmt
- * 
- * Return: length of the formatted output string
+ * _printf - Reproduce behavior of printf function
+ * @format: format string
+ * Return: value of printed chars
  */
+
 int _printf(const char *format, ...)
 {
-	int (*pfunc)(va_list, flags_t *);
-	const char *p;
-	va_list arguments;
-	flags_t flags = {0, 0, 0};
+	va_list ap;
+	int sum = 0, i = 0;
+	int (*func)();
 
-	register int count = 0;
+	if (!format || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
+	va_start(ap, format);
 
-	va_start(arguments, format);
-	if (!format || (format[0] == '%' && !format[1]))
-		return (-1);
-	if (format[0] == '%' && format[1] == ' ' && !format[2])
-		return (-1);
-	for (p = format; *p; p++)
+	while (format[i])
 	{
-		if (*p == '%')
+		if (format[i] == '%')
 		{
-			p++;
-			if (*p == '%')
+			if (format[i + 1] != '\0')
+				func = get_op(format[i + 1]);
+			if (func == NULL)
 			{
-				count += _putchar('%');
+				_putchar(format[i]);
+				sum++;
+				i++;
+			}
+			else
+			{
+				sum += func(ap);
+				i += 2;
 				continue;
 			}
-			while (get_flag(*p, &flags))
-				p++;
-			pfunc = get_print(*p);
-			count += (pfunc)
-				? pfunc(arguments, &flags)
-				: _printf("%%%c", *p);
-		} else
-			count += _putchar(*p);
+		}
+		else
+		{
+			_putchar(format[i]);
+			sum++;
+			i++;
+		}
 	}
-	_putchar(-1);
-	va_end(arguments);
-	return (count);
+	va_end(ap);
+	return (sum);
 }
